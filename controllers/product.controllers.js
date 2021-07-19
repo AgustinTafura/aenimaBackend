@@ -8,13 +8,12 @@ productController.getAllProducts = async( req,res )=>{
 }
 
 productController.getProduct = async( req,res )=>{
-    var product = await Product.findById(req.params.id)
-    res.json(product)
+    Product.findById(req.params.id).then(product=>res.json(product))
+    
 }
 
 productController.createProduct = async ( req,res ) => {
-    const {nombre, descripcion, marca, precio, imagenUrl} = req.body
-
+    const {nombre, descripcion, marca, precio, imagenUrl} = req.body.product
     var product = new Product({
         nombre,
         marca,
@@ -31,20 +30,25 @@ productController.createProduct = async ( req,res ) => {
 },
 
 productController.deleteProduct = async( req,res ) => {
-    await Product.findOneAndDelete(req.params.id)
-    res.json('product Delete')
+    const {id} = req.params
+    console.log(id)
+    Product.findOneAndDelete({_id:id}).then(productDeleted=>
+        res.json({productDeleted, msg:'product Delete'})
+    )
+    
 },
 
 productController.updateProduct = async (req,res) => {
-    const {nombre, descripcion, marca, precio, imagenUrl} = req.body
-    await Product.findOneAndUpdate(
-        req.params.id,
+    const {id} = req.params
+    const {nombre, descripcion, marca, precio, imagenUrl} = req.body.data
+    Product.findOneAndUpdate(
+        {_id:id},
         {nombre, descripcion, marca, precio, imagenUrl},
         {
           new: true,
           omitUndefined: true
-        })
-    res.json('product Updated')
+        }
+    ).then(productUpdated=>res.json(productUpdated))
 },
 
 
