@@ -17,7 +17,7 @@ async function saveImg(imagenUrl) {
         var ext = matches[1];
         var data = matches[2];
         var buffer = Buffer.from(data, 'base64');
-        fileName = new Date().getTime() + '.' + ext
+        var fileName = new Date().getTime() + '.' + ext
         try {
             fs.writeFileSync(path.join(__dirname, "../", "public/images/" + fileName), buffer)
             return fileName
@@ -28,10 +28,10 @@ async function saveImg(imagenUrl) {
 
     } else {
         var ext = path.extname(imagenUrl)
-        fileName = new Date().getTime() + ext
+        var fileName = new Date().getTime() + ext
 
         var createStream = fs.createWriteStream(path.join(__dirname, "../", "public/images/" + fileName))
-        axios.get(imagenUrl,{
+        await axios.get(imagenUrl,{
             responseType: 'stream',
         })
         .then(info=>{ 
@@ -41,6 +41,7 @@ async function saveImg(imagenUrl) {
         .catch(err=> {return false})
         
     }
+    return fileName
 }
 
 productController.getAllProducts = async( req,res )=>{
@@ -83,9 +84,8 @@ productController.deleteProduct = async( req,res ) => {
 
 productController.updateProduct = async (req,res) => {
     const {id} = req.params
-    const {nombre, descripcion, marca, precio, imagenUrl} = req.body.data
-
-    var fileName = await saveImg(imagenUrl)
+    const {nombre, descripcion, marca, precio, imagenUrl} = req.body.product
+    var fileName = imagenUrl ? await saveImg(imagenUrl) : undefined
 
     Product.findOneAndUpdate(
         {_id:id},
