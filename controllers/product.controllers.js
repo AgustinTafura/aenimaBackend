@@ -66,11 +66,11 @@ productController.createProduct = async ( req,res ) => {
         imagenUrl : fileName,
     })
 
-    // product.save()
-    // .then(newProduct =>{
-    //     res.json(newProduct)
-    // })
-    // .catch(err=>res.json(err))
+    product.save()
+    .then(newProduct =>{
+        res.json(newProduct)
+    })
+    .catch(err=>res.json(err))
 },
 
 productController.deleteProduct = async( req,res ) => {
