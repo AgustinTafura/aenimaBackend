@@ -71,7 +71,7 @@ productController.createProduct = async ( req,res ) => {
     .then(newProduct =>{
         res.json(newProduct)
     })
-    .catch(err=>res.json(err))
+    .catch(err=>res.status(400).send(err))
 },
 
 productController.deleteProduct = async( req,res ) => {
@@ -95,6 +95,7 @@ productController.updateProduct = async (req,res) => {
           omitUndefined: true
         }
     ).then(productUpdated=>res.json(productUpdated))
+    .then(err=>res.status(400).send(err))
 },
 
 
